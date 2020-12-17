@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text1"></div>
+        <div id="text2"></div>
+    </div>
+    <!-- 类，对象 -->
+
+    <!-- // 1.工厂方式 -->
+    <script type="text/javascript">
+        function Person(name) {
+            var p = new Object();
+            p.name = name;
+            p.say = function () {
+                console.log('I am ' + this.name)
+            }
+            return p;
+        }
+        var p1 = Person('工厂方式');
+        var p2 = Person('工厂方式');
+        p1.say();
+        p2.say();
+        console.log("是否对象共享方法", p1.say == p2.say);//false 每创建一个对象，对象的方法也是新的
+        console.log(p1, p2);
+    </script>
+
+    <!-- // 2.构造方法 -->
+    <script type="text/javascript">
+        function Person(name) {
+            this.name = name;
+            this.say = function () {
+                console.log('I am ' + this.name)
+            }
+        }
+        var p1 = new Person("构造方法");
+        var p2 = new Person("构造方法1");
+        p1.say();
+        p2.say();
+        console.log("是否对象共享方法", p1.say == p2.say);//false
+        console.log(p1, p2)
+    </script>
+
+    <!-- // 3.原型方式 -->
+    <script type="text/javascript">
+        function Person() {
+        }
+
+        Person.prototype.name = '';
+        Person.prototype.say = function () {
+            console.log('I am ' + this.name)
+        }
+        var p1 = new Person("原型方式");
+        var p2 = new Person("原型方式1");
+        p1.say();
+        p2.say();
+        console.log("是否对象共享方法", p1.say == p2.say);//true
+        console.log(p1, p2)
+    </script>
+
+    <!-- 构造方法+原型方式 -->
+    <!-- 属性在构造函数中创建，方法放在原型链上 -->
+    <script type="text/javascript">
+        function Person(name) {
+            this.name = name
+        }
+        Person.prototype.say = function () {
+            console.log('I am ' + this.name)
+        }
+        var p1 = new Person("构造方法+原型方式");
+        var p2 = new Person("构造方法+原型方式1");
+        p1.say();
+        p2.say();
+        console.log(p1.say == p2.say);//true
+        console.log(p1, p2)
+    </script>
+
+    <!-- 动态原型链 -->
+    <script type="text/javascript">
+        function Person(name) {
+            this.name = name
+            if (Person.prototype.say == undefined) {
+                Person.prototype.say = function () {
+                    console.log('I am ' + this.name)
+                }
+            }
+        }
+        var p1 = new Person("动态原型链");
+        var p2 = new Person("动态原型链1");
+        p1.say();
+        p2.say();
+        console.log("是否对象共享方法", p1.say == p2.say);//true
+        console.log(p1, p2)
+    </script>
+    <!-- es6方式 -->
+    <script type="text/javascript">
+        class Personn {
+            constructor(name) {
+                this.name = name;
+            }
+            say() {
+                console.log('I am ' + this.name)
+            }
+        }
+        var p1 = new Personn(" Es6方式 ");
+        var p2 = new Personn(" Es6方式1");
+        p1.say();
+        p2.say();
+        console.log("是否对象共享方法", p1.say == p2.say);//true
+        console.log(p1, p2)
+    </script>
+</body>
+
+</html>

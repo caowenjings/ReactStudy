@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text1"></div>
+        <div id="text2"></div>
+    </div>
+    <!-- React面向组件开发 -->
+    <script type="text/babel">
+        //没有面向组件时顺序 1.创建虚拟dom 2.渲染dom
+        //面向组件时：1.创建组件 2.渲染组件
+
+        // 1.定义组件
+        // 方式1:工厂函数组件（简单组件-无状态组件）
+        function MyComponent() {
+            return <h2>工厂函数组件（简单组件）</h2>
+        }
+        // 2.渲染组件标签
+        ReactDOM.render(<MyComponent />, document.getElementById('text1'));
+
+        // 方式1:Es6类组件（复杂组件-有状态组件）
+        class MyComponent1 extends React.Component {
+            render() {
+                return <h2>Es6类组件（复杂组件-有状态组件）</h2>
+            }
+        }
+        ReactDOM.render(<MyComponent1 />, document.getElementById('text2'));
+
+    </script>
+
+</body>
+
+</html>

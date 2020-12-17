@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text1"></div>
+    </div>
+    <!-- 继承 -->
+    <script type="text/babel">
+        class MyComponent extends React.Component {
+            //  1. 初始化状态
+            constructor(props) {
+                super(props);
+                this.state = {
+                    isLike: false,
+                }
+
+                //改变this指向，将新的方法的指向绑定到此组件上，bind只产生一次新的对象
+                this.handleState = this.handleState.bind(this)
+            }
+
+
+            //3.改变状态
+            //新加的方法：不属于React.Component,this就指向undinefind
+            handleState() {
+                const isLike = !this.state.isLike;
+                this.setState({ isLike })
+
+                // this.setState({ isLike: isLike })
+            }
+
+            // 2.获取状态
+            //本来有的方法：属于React.Component,this就指向这个组件对象
+            render() {
+                const { isLike } = this.state
+                // const isLike  = this.state.isLike
+
+                return <h2 onClick={this.handleState}>我是{isLike ? '小白' : '小黑'}</h2>
+
+                /* return <h2 onClick={this.handleState.bind(this)}>我是{isLike ? '小白' : '小黑'}</h2>
+                    此方法改变this指向，效率低， 每渲染bind一次就产生一次新的对象 
+                */
+            }
+
+        }
+
+
+        ReactDOM.render(<MyComponent />, document.getElementById('text1'));
+
+
+
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text1"></div>
+        <div id="text2"></div>
+    </div>
+    <!-- 1.普通方式创建虚拟dom -->
+    <script type="text/javascript">
+        var msg = "i like you"
+        var myId = "atguigu"
+
+        var vDom = React.createElement('h2', { id: myId }, msg);
+
+        ReactDOM.render(
+            vDom,
+            document.getElementById('text1')
+        );
+
+    </script>
+
+    <!-- 2.jsx 创建虚拟dom -->
+    <script type="text/babel">
+        var msg = "i like you"
+        var myId = "atguigu"
+
+        var vDom = <h1 id={myId.toLocaleUpperCase()}>{msg.toLocaleUpperCase()}</h1>;
+
+        ReactDOM.render(
+            vDom,
+            document.getElementById('text2')
+        );
+
+        var arr = ['vue', 'react', 'webpack', 'html', 'css']
+        ReactDOM.render(
+            <div>
+                {arr.map((item, index) => {
+                    return <li key={index}>{item}</li>
+                })
+                }
+            </div>,
+            document.getElementById('text2')
+        );
+
+
+
+    </script>
+
+</body>
+
+</html>
