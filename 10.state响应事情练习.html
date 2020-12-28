@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text1"></div>
+    </div>
+    <script type="text/babel">
+
+        class MyComponent extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    count: 5,
+                }
+            }
+            render() {
+                let { count } = this.state;
+                return <div>
+                    <p>{count}</p>
+                    <button onClick={() => { this.up() }}>up</button>
+                    <button onClick={() => { this.down() }}>down</button>
+                </div>
+            }
+            up() {
+                this.setState({ count: this.state.count + 1 })
+            }
+            down() {
+                let { count } = this.state;
+                if (count > 0) {
+                    this.setState({ count: count - 1 })
+                }
+            }
+        }
+
+        ReactDOM.render(<MyComponent />, document.getElementById('text1'));
+
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text1"></div>
+    </div>
+    <script type="text/babel">
+        // 1.原型：每个函数都有一个prototype的属性， prototype相当于一个指针，指向一个对象。
+        //  该对象的用途是：该构造函数所创建的所有实例共享的方法和属性都被包含在原型内。
+        function Person() {
+
+        }
+        Person.prototype.name = "Json"
+        var p1 = new Person();
+
+        console.log(p1.name);
+        console.log(p1)
+
+    </script>
+
+    <!--2.继承 -->
+    <script type="text/babel">
+        //   2.1:构造函数模式
+        // 1.利用 call 借用构造函数继承
+        // 优点: 实现了继承属性，但值都不相同
+        // 缺点: 无法继承父级类别中原型上的方法
+
+        //该模式利用call方法改变父构造函数的this指向，同时将传入的参数传给父构造函数，从而实现共享属性。但这种方式定义的方法只能写到子构造函数内，造成函数无法复用的问题。
+
+        function Father(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+        function Son(name, age, like) {
+            Father.call(this, name, age)
+            this.like = like;
+        }
+        let son1 = new Son("John", 18, "apple");
+
+        console.log(son1)
+    </script>
+
+    <script type="text/babel">
+        // 2.2:原型模式
+        // 利用prototype，将Student 的prototype 指向 Person 来达到继承效果,
+        // 优点：继承了父级原型上的方法
+        // 缺点: 实例化多个Student 都必须共用相同的name 和 age
+        // 该方式通过让子构造函数的原型对象指向父构造函数实例，从而实现继承父构造函数的属性和方法。但缺点是所有的原型属性都会被所有的实例所共享，所以应该在构造函数中定义属性而不是在原型对象中定义。
+        function Father(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+        Father.prototype.eat = function () {
+            console.log("Person 吃饭")
+        }
+
+        function Son(like) {
+            this.like = like
+        }
+
+        //继承
+        Son.prototype = new Father("小红", 10);
+        Son.prototype.constructor = Son;
+
+        let son2 = new Son("apple");
+        son2.eat();
+        console.log("son2:", son2, son2.name)
+    </script>
+
+    <!--2.3:组合方式 -->
+    <script>
+        function Father(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+        Father.prototype.eat = function () {
+            console.log('Person1 吃饭')
+        }
+
+        function Son(name, age, like) {
+            Father.call(this, name, age);//继承属性
+            this.like = like;
+        }
+
+        Son.prototype = new Father();//继承方法
+        Son.prototype.constructor = Son;
+
+        var son3 = new Son('Sres', 18, 'apple');
+
+        son3.eat();
+        console.log("son3:", son3);
+
+    </script>
+    <!--2.4:Es6 class继承 -->
+    <script>
+        // class类
+        class Person1 {
+            constructor(name, age) {
+                this.name = name;
+                this.age = age;
+                console.log('构造函数执行了')//调用new的时候就自动执行了构造函数，所以接收参数也是在构造函数出接收
+            }
+            eat() {
+                console.log("person2吃饭!")
+            }
+        }
+        let son4 = new Person1("张三", '李四');
+        son4.eat();
+        console.log('son4:', son4)
+    </script>
+    <script>
+        // 继承
+        class Person2 {
+            constructor(name, age) {
+                this.name = name;
+                this.age = age;
+            }
+            eat() {
+                console.log(this.name + "person2吃饭!")
+            }
+        }
+        class Childern extends Person2 {
+            constructor(name, age) {
+                super(name, age);//当继承后需要用super()来接收父类的constructor构造函数
+            }
+            showName() {
+                super.eat()//调用父级的方法也是用super
+            }
+        }
+        let son5 = new Childern("李四", '19');
+        console.log("son5", son5);
+        son5.eat();
+        // 继承用extends,当继承后需要用super()来接收父类的constructor构造函数，否在报错，
+        // 当new一个子类的时候先把参数传入子类构造函数再通过super（）讲父类的构造函数引入，就可以调用父类
+    </script>
+
+
+
+
+
+
+
+</body>
+
+</html>
