@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text1"></div>
+    </div>
+
+    <!-- 手写实现call -->
+
+    <!-- 方法一 -->
+    <script type="text/babel">
+        // 主要思路如上，不一样的是要通过arguments取出除第一位之外的所有参数放到一个数组里，然后通过展开运算符给要执行的函数或方法传参
+        Function.prototype.myCall = function (con) {
+            con = new Object(con) || window || global;//没有参数时，指向window
+            con.fun = this;   //给目标对象新建一个属性，绑定这个函数
+            let paramsArr = new Array();  //新建一个空数组
+            for (let i = 1; i < arguments.length; i++) {
+                paramsArr.push(arguments[i]);
+            }
+            con.fun(...paramsArr);  //运行一下
+            delete con.fun;   //删除目标对象上的fun属性
+        }
+
+        var obj = { name: 12 }
+
+        function fn(num1, num2) {
+            console.log("this:" + this);
+            console.log("num1:" + num1);
+            console.log("num2:" + num2);
+        }
+
+        fn.myCall(100, 200);
+        fn.myCall(obj, 100, 200);
+
+    </script>
+
+    <!-- 方法二 -->
+    <!-- 使用eval 将原始函数转换为字符串，再将其中的this替换为目标对象 -->
+    <script>
+        Function.prototype.myCall1 = function (context) {
+            var str;
+            var reg = new RegExp('this', 'g');//全局查找this
+            str = this.toString().replace(reg, 'context');//1.replace('this','context')只会替换第一处，正则表达式会替换所有
+
+            var newArguments = [];//1.实现参数传入，将当前函数中的参数除去第一个将剩余的传入目标函数
+            for (var i = 1, len = arguments.length; i < len; i++) {
+                newArguments.push('arguments[' + i + ']');
+            }
+            //var newArguments=[].slice.call(arguments,1);//不能用这种方法，否则eval执行时会提示参数变量没有定义，需要跟B处一样，将每个参数名转换为字符串形式，eval执行时动态计算每一个参数值 
+            eval('(' + str + ')(' + newArguments + ')');  //3.eval计算字符串
+
+        }
+
+        var obj = { name: 12 }
+
+        function fn1(num1, num2) {
+            console.log("this:" + this);
+            console.log("num1:" + num1);
+            console.log("num2:" + num2);
+        }
+
+        fn1.myCall1(1, 2);
+        fn1.myCall1(obj, 1, 2);
+
+
+    </script>
+
+
+    <!-- 练习 -->
+    <script>
+        function fn1() { console.log(1); }
+        function fn2() { console.log(2); }
+        fn1.call(fn2); // ->1
+        //原理：首先fn1通过原型链机制找到Function.prototype上的call方法，并且让call方法执行
+        // 此时call这个方法中的this就是fn1，在call方法执行过程中，让fn1中this关键字变成fn2，然后让fn1执行 -->
+
+
+        fn1.call.call(fn2); // ->2
+        // Function.prototype原型上的call（因为fn.call这个东西也是个函数数据类型），在第二次找到call时，让call方法执行，此时
+        // 的this是fn1.call。
+
+    </script>
+
+
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text1"></div>
+    </div>
+
+    <!-- 1.类数组 -->
+    <!-- 具备数组的特征，有length，可以for循环，可以通过索引调用
+         但是不能用原型上来的方法：splice，push,forEach
+     -->
+    <script type="text/babel">
+        var likeArr = {
+            0: 12,
+            1: 13,
+            2: 14,
+            length: 4
+        }
+        for (var i = 0, len = likeArr.length; i < len; i++) {
+            console.log(likeArr[i])
+        }
+    </script>
+
+    <!-- https://segmentfault.com/a/1190000022758881 -->
+    <!-- 2.call 借用方法 -->
+    <script>
+
+    </script>
+
+</body>
+
+</html>
