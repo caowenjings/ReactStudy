@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text"></div>
+    </div>
+
+    <!-- refs用于表示组件内某个元素 -->
+
+    <!--需求
+        1. 点击按钮时，提示输入框中的值
+        2. 失去焦点时，提示输入框的值
+     -->
+    <script type="text/babel">
+        class MyComponent1 extends React.Component {
+            constructor(props) {
+                super(props);
+
+                // 3.1绑定ref
+                this.myref = React.createRef();
+
+
+                this.showAlert = this.showAlert.bind(this);
+                this.showAlert1 = this.showAlert1.bind(this);
+                this.showAlert2 = this.showAlert2.bind(this);
+                this.handelBlur = this.handelBlur.bind(this);
+            }
+            render() {
+                return (
+                    <div>
+                        <p>--------字符串形式---------</p>
+                        <input type="text" ref="content" />
+                        <button onClick={this.showAlert}>提示输入框中的值</button>
+
+                        <p>--------回调函数形式---------</p>
+                        <input type="text" ref={input => this.input = input} />
+                        <button onClick={this.showAlert1}>提示输入框中的值</button>
+
+                        <p>--------React.createRef()---------</p>
+                        <input type="text" ref={this.myref} />
+                        <button onClick={this.showAlert2}>提示输入框中的值</button>
+
+                        <input type="text" placeholder="失去焦点时，提示...." onBlur={this.handelBlur} />
+                    </div>
+                )
+            }
+            // 1.ref字符串形式 this.refs获取值
+            // <input type="text" ref="content" />
+            showAlert() {
+                let input = this.refs.content.value;
+                alert(input)
+            }
+            //2.ref回调函数形式，回调函数就是在dom节点或组件上挂载函数，函数的入参是dom节点或组件实例，达到的效果与字符串形式是一样的，都是获取其引用。
+            // <input type="text" ref={(input) => { this.textInput = input }}
+            showAlert1() {
+                let input = this.input.value;
+                alert(input)
+            }
+            //3.creatRefs()使用此方法来创建ref。将其赋值给一个变量，通过ref挂载在dom节点或组件上，该ref的current属性将能拿到dom节点或组件的实例
+            showAlert2() {
+                let input = this.myref.current.value
+                alert(input)
+            }
+            handelBlur(event) {
+                alert(event.target.value)
+            }
+        }
+
+        ReactDOM.render(<MyComponent1 />, document.getElementById('text'))
+
+    </script>
+</body>
+
+</html>
