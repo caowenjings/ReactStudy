@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text"></div>
+    </div>
+
+    <script type="text/babel">
+        class MyComponent1 extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    age: this.props.age,
+                    frends: []
+                }
+            }
+            render() {
+                let { name, sex } = this.props;
+                let { age, frends } = this.state
+                return (
+                    <div>
+                        <p>我的名字是:{name},性别是{sex}</p>
+                        <p>我今年{age}岁了</p>
+                        <button onClick={this.addAge.bind(this)}>增加一岁</button>
+                        <ul>我的朋友是：{frends.map((item, index) => {
+                            return <li key={index}>朋友：{item}</li>
+                        })}</ul>
+                    </div>
+                )
+            }
+            addAge() {
+                let { age, frends } = this.state;
+                frends.push(Math.floor(Math.random() * 100))
+
+                this.setState({
+                    age: age += 1,
+                    frends: frends
+                })
+
+            }
+
+        }
+
+        MyComponent1.defaultProps = {
+            age: 1,
+            sex: "中性"
+        }
+        var p3 = {
+            name: "xiaoxiao",
+            age: 13,
+            sex: "男"
+        }
+
+        ReactDOM.render(<MyComponent1 {...p3} />, document.getElementById('text'))
+
+    </script>
+</body>
+
+</html>
