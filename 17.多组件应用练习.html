@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+    <style>
+        .app {
+            border: 2px solid pink;
+            width: 500px;
+            height: auto;
+            min-height: 400px;
+            margin: 50px auto;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .app .title {
+            position: absolute;
+            top: -28px;
+            left: 20px;
+            background-color: #fff;
+            z-index: 200;
+            padding: 0 10px;
+        }
+
+        .inputbox {
+            margin-bottom: 10px;
+        }
+
+        .inputbox input {
+            height: 30px;
+        }
+
+        table {
+            border: 1px solid pink;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            font-size: 1.1em;
+            padding-top: 5px;
+            padding-bottom: 4px;
+            background-color: pink;
+            color: #ffffff;
+            width: 100px;
+            border-right: 1px solid pink;
+            padding-left: 10px;
+        }
+
+        td {
+            width: 100px;
+            border-right: 1px solid pink;
+            border-bottom: 1px solid pink;
+            text-align: left;
+            padding: 10px;
+        }
+    </style>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text"></div>
+    </div>
+
+    <!-- 多组件应用 -->
+
+    <!--需求 1: 完成对信息的展示/添加，删除? -->
+    <!-- 
+        功能界面的组件化：
+        1.拆分组件：拆分组件，抽取组件（按层次）
+        2.实现静态组件：使用组件实现静态页面效果（只有静态界面，没有动态数据与交互）
+        3.实现动态组件：
+          3.1实现初始化数据，动态显示
+          3.2交互功能（从绑定事件监听开始）
+     -->
+    <!--重点：
+       1. 数据存在那个组件里面
+       如果数据只有一个组件使用，就放在此组件里面
+       如果数据有多个组件使用，就放在共同的父组件里面 
+
+       2.子组件不能改变父组件的状态
+       状态（数据）在哪个组件，更新状态的方法就定义在哪个组件
+       解决方案：父组件定义函数，props传递给子组件，子组件调用方法
+
+    -->
+    <script type="text/babel">
+        class App extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    tableList: [
+                        { name: "张三", sex: 1, age: 29 },
+                        { name: "张三1", sex: 2, age: 29 },
+                        { name: "张三2", sex: 1, age: 33 }]
+                }
+                this.addStudent = this.addStudent.bind(this);
+                this.deleteStudent = this.deleteStudent.bind(this);
+            }
+            addStudent(value) {
+                let { tableList } = this.state;
+                tableList.push(value);
+                this.setState(tableList)
+            }
+            deleteStudent(index) {
+                let { tableList } = this.state;
+                tableList.splice(index, 1);
+                this.setState(tableList);
+            }
+            render() {
+                let { tableList } = this.state;
+                return (
+                    <div className="app">
+                        <p className="title">信息录入系统</p>
+                        <AddStudent addStudent={this.addStudent} />
+                        <FromList tableList={tableList} deleteStudent={this.deleteStudent} />
+                    </div>)
+            }
+        }
+        class AddStudent extends React.Component {
+            constructor(props) {
+                super(props)
+                this.nameInput = React.createRef();
+                this.sexInput = React.createRef();
+                this.ageInput = React.createRef();
+                this.add = this.add.bind(this);
+            }
+            add() {
+                let name = this.nameInput.current.value, sex = this.nameInput.current.value, age = this.ageInput.current.value;
+
+                if (name && sex && age) {
+                    this.props.addStudent({
+                        name,
+                        sex,
+                        age
+                    })
+                } else {
+                    alert("还有信息没有填写完整哦！")
+                }
+            }
+            render() {
+                return (
+                    <div className='AddStudent'>
+                        <div className="inputbox">
+                            <label>姓名:</label>
+                            <input type="text" ref={this.nameInput} />
+                        </div>
+                        <div className="inputbox">
+                            <label>性别:</label>
+                            <input type="number" placehodler="1是男，2是女" ref={this.sexInput} />
+                        </div>
+                        <div className="inputbox">
+                            <label>年龄:</label>
+                            <input type="number" ref={this.ageInput} />
+                        </div>
+                        <button onClick={this.add}>创建用户</button>
+                    </div>)
+            }
+        }
+        class FromList extends React.Component {
+            constructor(props) {
+                super(props)
+
+                this.btn = React.createRef();
+            }
+            delete(index) {
+                this.props.deleteStudent(index);
+            }
+            render() {
+                let { tableList } = this.props
+                return (<div>
+                    <table>
+                        <tbody>
+                            <tr><th>姓名</th><th>性别</th><th>年龄</th><th>操作</th></tr>
+                            {tableList.map((item, index) => {
+                                return <tr key={index}>
+                                    <td>{item.name}</td>
+                                    <td>{item.sex == 1 ? '男' : '女'}</td>
+                                    <td>{item.age}</td>
+                                    <td><button onClick={this.delete.bind(this, index)}>删除</button></td>
+                                </tr>
+                            })}</tbody>
+                    </table>
+                </div >)
+            }
+        }
+
+
+
+        ReactDOM.render(<App />, document.getElementById('text'))
+
+    </script>
+</body>
+
+</html>

@@ -17,28 +17,95 @@
         <div id="text"></div>
     </div>
 
-    <!-- refs用于表示组件内某个元素 -->
+    <!-- 多组件应用 -->
 
-    <!--需求
-        1. 点击按钮时，提示输入框中的值
-        2. 失去焦点时，提示输入框的值
+    <!--需求 1: 完成对信息的展示/添加，清除输入框? -->
+    <!-- 
+        功能界面的组件化：
+        1.拆分组件：拆分组件，抽取组件（按层次）
+        2.实现静态组件：使用组件实现静态页面效果（只有静态界面，没有动态数据与交互）
+        3.实现动态组件：
+          3.1实现初始化数据，动态显示
+          3.2交互功能（从绑定事件监听开始）
      -->
+    <!--重点：
+       1. 数据存在那个组件里面
+       如果数据只有一个组件使用，就放在此组件里面
+       如果数据有多个组件使用，就放在共同的父组件里面 
+
+       2.子组件不能改变父组件的状态
+       状态（数据）在哪个组件，更新状态的方法就定义在哪个组件
+       解决方案：父组件定义函数，props传递给子组件，子组件调用方法
+
+    -->
     <script type="text/babel">
-        class MyComponent1 extends React.Component {
+        class App extends React.Component {
             constructor(props) {
                 super(props);
+                this.state = {
+                    todoList: ["吃饭", "睡觉"]
+                }
+                this.addTodos = this.addTodos.bind(this);
             }
             render() {
+                let { todoList } = this.state
                 return (
                     <div>
+                        <h1>Simple Todo List</h1>
+                        <Add len={todoList.length} addTodos={this.addTodos}></Add>
+                        <List todoList={todoList}></List>
 
                     </div>
                 )
             }
+            addTodos(value) {
+                let { todoList } = this.state;
+                todoList.unshift(value);
+                this.setState({ todoList });
+            }
 
         }
 
-        ReactDOM.render(<MyComponent1 />, document.getElementById('text'))
+        class Add extends React.Component {
+            constructor(props) {
+                super(props);
+                this.myInput = React.createRef();
+                this.addList = this.addList.bind(this);
+            }
+            render() {
+                return (
+                    <div>
+                        <input type="text" ref={this.myInput} />
+                        <button onClick={this.addList}>app #{this.props.len}</button>
+                    </div>
+                )
+            }
+
+            addList() {
+                let input = this.myInput.current.value;//1.读取数据
+                if (!input) return //2.检查合法性
+                this.props.addTodos(input)//3.添加(子组件调用父组件的方法)
+                this.myInput.current.value = "" //4.清楚输入
+            }
+        }
+
+        class List extends React.Component {
+            constructor(props) {
+                super(props);
+            }
+            render() {
+                let todoList = this.props.todoList
+                return (
+                    <ul>
+                        {todoList.map((item, index) => {
+                            return <li key={index}>{item}</li>
+                        })}
+                    </ul>
+                )
+            }
+        }
+
+        ReactDOM.render(<App />, document.getElementById('text'))
 
     </script>
 </body>
