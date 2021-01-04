@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+    <style>
+
+    </style>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text"></div>
+    </div>
+
+    <!-- 表单组件 -->
+
+    <!--需求: 自定义包含表单的组件
+            1.输入用户名，密码后，点击登陆提示输入信息
+            2.不提交表单
+    -->
+
+    <!-- 表单的组件分类：
+        1.受控组件：表单项输入数据能自动收集成状态（react控制取值的表单输入元素）
+        2.非受控组件：需要时才手动读取表单输入框中的数据
+
+
+        在 HTML 中，表单元素（如<input>、 <textarea> 和 <select>）之类的表单元素通常自己维护 state，并根据用户输入进行更新。
+        而在 React 中，可变状态（mutable state）通常保存在组件的 state 属性中，并且只能通过使用 setState()来更新。
+
+        我们可以把两者结合起来，使 React 的 state 成为“唯一数据源”。
+        渲染表单的 React 组件还控制着用户输入过程中表单发生的操作。
+        被 React 以这种方式控制取值的表单输入元素就叫做“受控组件”。
+        案例总结:开发中尽可能用受控组件, 因为ref方式官方不希望过渡使用。
+     -->
+    <!-- 收集表单数据
+        方法1:使用refs获取（refs有三种方式获取）
+        方法2:使用受控组件方式获取
+     -->
+
+
+    <script type="text/babel">
+
+        class App extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    pwd: '',
+                }
+                this.handlesumbit = this.handlesumbit.bind(this)
+            }
+            setPwd(event) {//受控组件
+                //react通过这种方式来控制组件
+                //1.读取状态
+                let { pwd } = this.state;
+                pwd = event.target.value;
+                //2.更新状态
+                this.setState({ pwd })
+            }
+            handlesumbit(event) {
+                let { pwd } = this.state;
+                let name = this.nameinput.value;//非受控
+                alert(`密码是:${pwd},用户名：${name}`);
+                event.preventDefault();//阻止默认提交
+            }
+            render() {
+                return (
+                    <div>
+                        <form action="" onSubmit={this.handlesumbit}>
+                            <div> 用户名：<input type="text" ref={input => this.nameinput = input} /></div>
+                            <div>密码：<input type="password" value={this.state.pwd} onChange={(event) => this.setPwd(event)} /></div>
+                            <input type="submit" value="登陆" />
+                        </form>
+                    </div>)
+            }
+
+        }
+
+
+
+        ReactDOM.render(<App />, document.getElementById('text'))
+
+    </script>
+</body>
+
+</html>
