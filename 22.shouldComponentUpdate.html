@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+    <style>
+
+
+    </style>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text"></div>
+    </div>
+    <!--  可通过shouldComponentUpdatext方法优化 减少不必要的更新-->
+    <script type="text/babel">
+        class Child extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    text: 1
+                }
+            }
+            shouldComponentUpdate(nextProps, nextStates) {//没有这个函数时，不管有没有变化都会渲染
+                if (nextStates.text === this.state.text) return false
+                return true
+            }
+
+            handleClick = () => { // 虽然调用了setState ，但state并无变化
+                const preSomeThings = this.state.text
+                this.setState({
+                    text: preSomeThings
+                })
+            }
+
+            render() {
+                console.log("--render-----")
+                return <button onClick={this.handleClick}>{this.state.text}点击</button>
+            }
+        }
+        ReactDOM.render(<Child />, document.getElementById('text'))
+    </script>
+</body>
+
+</html>

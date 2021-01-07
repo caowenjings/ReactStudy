@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+    <style>
+
+
+    </style>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text"></div>
+    </div>
+
+    <!-- 子组件显示父组件显示过来的props的两种方式：
+    1.直接使用：
+       父组件改变props后，子组件重新渲染，由于直接使用props，即可显示最新的props
+      缺点：
+      每当父组件重新render导致重传props，子组件将直接重新渲染，无论props是否有变化
+     优化方式：
+      可通过shouldComponentUpdate方法优化。
+    2.props转换成自己的state使用：
+       父组件每次重新传递时我们需要重新处理，在componentWillReceiveProps方法中，将props转换成state就用到 
+     -->
+    <script type="text/babel">
+
+        class Life extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    text: this.props.text,
+                    title: "我是标题"
+                }
+            }
+
+            //  错误例子：不会更新子组件里面的state
+            // componentWillReceiveProps(nextProps) {
+            //     console.log('componentWillReceiveProps' + nextProps.text)
+            //     let { text } = this.state;
+            //     this.setState({
+            //         text: text,
+            //     });
+            // }
+            componentWillReceiveProps(nextProps) {
+                console.log('componentWillReceiveProps' + nextProps.text)
+                this.setState({ text: nextProps.text }); //执行了这一句页面才会重新渲染
+            }
+            render() {
+                console.log("render")
+                return (
+                    <div>
+                        <p>{this.state.title}</p>
+                        <p>{this.state.text}</p>
+                    </div>
+                )
+            }
+
+
+        }
+        class Father extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    name: "ss"
+                }
+                this.change = this.change.bind(this);
+            }
+            change() {
+                let { name } = this.state;
+                name = "123"
+                this.setState({ name })
+            }
+            render() {
+                return (
+                    <div>
+                        <Life text={this.state.name}></Life>
+                        <button onClick={this.change}>改变</button>
+                    </div>
+                )
+            }
+        }
+        ReactDOM.render(<Father />, document.getElementById('text'))
+    </script>
+</body>
+
+</html>

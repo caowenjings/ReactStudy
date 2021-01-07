@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+    <style>
+
+
+    </style>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text"></div>
+    </div>
+    <!--需求: 自定义组件
+            1.input框没有变，旁边的文字变了 
+    -->
+    <!-- 组件不是全部更新，只是更新了需要更新的地方（input框没有变，旁边的文字变了 -->
+
+    <script type="text/babel">
+
+        class Life extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    date: new Date()
+                }
+            }
+            //挂载阶段：加载前使用
+            componentDidMount() {
+                console.log("加载前componentWillMount-----")
+                setInterval(function () {
+                    let { date } = this.state
+                    date = new Date();
+                    this.setState({ date })
+                }.bind(this), 1000)
+            }
+
+            render() {
+                console.log("render")
+                return (
+                    <div>
+                        <input type="text" placeholder="1234" />
+                        <p>hello{this.state.date.toString()}</p>
+                    </div>
+                )
+            }
+
+
+        }
+
+
+        ReactDOM.render(<Life msg="太难了！" />, document.getElementById('text'))
+
+    </script>
+</body>
+
+</html>
