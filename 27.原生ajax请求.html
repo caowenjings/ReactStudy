@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+    <style>
+    </style>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text"></div>
+    </div>
+    <script type="text/babel">
+
+        class MyComponent extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    name: null,
+                    url: null
+                }
+            }
+            componentDidMount() {
+                // 在这里发送原声js的ajax的异步请求
+                /*
+               https://shimo.im/docs/3jYXhcJhgHpQD96H
+               传统 Ajax 指的是 XMLHttpRequest（XHR）， 最早出现的发送后端请求技术，隶属于原始js中，
+               核心使用XMLHttpRequest对象，多个请求之间如果有先后关系的话，就会出现回调地狱。
+               */
+
+                let respUrl = "https://api.github.com/search/repositories?q=re&sort=stars";
+                //2.创建XMLHttpRequest核心对象
+                let xmlHttp = new XMLHttpRequest();
+                //3.打开链接  open里面的三个参数 连接方式 /需要发送的信息 /是否异步 
+                xmlHttp.open("GET", respUrl, true);
+                //4.发送请求
+                xmlHttp.send();
+                //5.处理响应
+                xmlHttp.onreadystatechange = () => {
+                    //判断请求和响应是否成功
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                        //获取返回的数据
+                        console.log(JSON.parse(xmlHttp.responseText));
+
+                        let { name, html_url } = JSON.parse(xmlHttp.responseText).items[0];
+
+                        this.setState({
+                            name: name,
+                            url: html_url
+                        })
+                    }
+                }
+            }
+
+            render() {
+                let { name, url } = this.state;
+                if (name == null) {
+                    return <h2>LOADING ......</h2>
+                } else {
+                    return <h2>MOST START IS <a href={url}>{name}</a></h2>
+                }
+            }
+
+        }
+
+        ReactDOM.render(<MyComponent />, document.getElementById('text'))
+
+
+    </script>
+</body>
+
+</html>

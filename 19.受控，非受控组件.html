@@ -56,7 +56,8 @@
                 }
                 this.handlesumbit = this.handlesumbit.bind(this)
             }
-            setPwd(event) {//受控组件
+            //受控组件
+            setPwd(event) {
                 //react通过这种方式来控制组件
                 //1.读取状态
                 let { pwd } = this.state;
@@ -64,9 +65,10 @@
                 //2.更新状态
                 this.setState({ pwd })
             }
+            //非受控
             handlesumbit(event) {
                 let { pwd } = this.state;
-                let name = this.nameinput.value;//非受控
+                let name = this.nameinput.value;
                 alert(`密码是:${pwd},用户名：${name}`);
                 event.preventDefault();//阻止默认提交
             }

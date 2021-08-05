@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+    <style>
+    </style>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text"></div>
+    </div>
+
+
+    <script type="text/babel">
+
+        class MyComponent extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    name: null,
+                    url: null
+                }
+            }
+            componentDidMount() {
+                // 在这里发送fetch的异步请求，fetch 是本来就有的函数
+                /*
+                1. 语法简洁，更加语义化
+                2. 基于标准 Promise 实现，支持 async/await
+                3. 同构方便，使用 [isomorphic-fetch](https://github.com/matthew-andrews/isomorphic-fetch)
+                4.更加底层，提供的API丰富（request, response）
+                5.脱离了XHR，是ES规范里新的实现方式
+
+                1）fetch只对网络请求报错，
+                   对400，500都当做成功的请求，服务器返回 400，500 错误码时并不会 reject，
+                   只有网络错误这些导致请求不能完成时，fetch 才会被 reject。
+                2）fetch默认不会带cookie，需要添加配置项： fetch(url, { credentials: 'include' })
+                3）fetch不支持abort，不支持超时控制，使用setTimeout及Promise.reject的实现的超时控制并不能阻止请求过程继续在后台运行，造成了流量的浪费
+                4）fetch没有办法原生监测请求的进度，而XHR可以
+                */
+
+                let respUrl = "https://api.github.com/search/repositories?q=re&sort=stars";
+
+                fetch(respUrl)
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then((myJson) => {
+                        let { name, html_url } = myJson.items[0];
+
+                        this.setState({
+                            name: name,
+                            url: html_url
+                        })
+
+                    });
+            }
+
+            render() {
+                let { name, url } = this.state;
+                console.log(name)
+                if (name == null) {
+                    return <h2>LOADING ......</h2>
+                } else {
+                    return <h2>MOST START IS <a href={url}>{name}</a></h2>
+                }
+            }
+
+        }
+
+        ReactDOM.render(<MyComponent />, document.getElementById('text'))
+
+
+    </script>
+</body>
+
+</html>

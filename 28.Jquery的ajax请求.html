@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+    <style>
+    </style>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text"></div>
+    </div>
+    <script type="text/babel">
+
+        class MyComponent extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    name: null,
+                    url: null
+                }
+            }
+            componentDidMount() {
+                // 在这里发送Jquery的ajax的异步请求
+                // 1.async:false,  表示将异步执行改为同步执行，同步执行的顺序按照代码中所写的顺序 ：解决回调地狱
+                /*
+                缺点：1.本身是针对MVC的编程,不符合现在前端MVVM的浪潮
+                     2.Query整个项目太大，单纯使用ajax却要引入整个JQuery非常的不合理（采取个性化打包的方案又不能享受CDN服务）
+                */
+
+                let respUrl = "https://api.github.com/search/repositories";
+                $.ajax({
+                    type: 'GET',
+                    async: false,//为false是同步请求，
+                    url: respUrl,
+                    data: { q: "re", sort: 'stars' },
+                    dataType: "json",//预期的服务器响应的数据类型。
+                    success: res => {
+                        console.log("数据1")
+                        let { name, html_url } = res.items[0];
+                        this.setState({
+                            name: name,
+                            url: html_url
+                        })
+                    },
+                    error: error => {
+                        console.log(error);
+                    }
+                });
+
+                $.ajax({
+                    type: 'GET',
+                    async: false,
+                    url: respUrl,
+                    data: { q: "re", sort: 'stars' },
+                    dataType: "json",//预期的服务器响应的数据类型。
+                    success: res => {
+                        console.log("数据2")
+                        let { name, html_url } = res.items[0];
+                        this.setState({
+                            name: name,
+                            url: html_url
+                        })
+                    },
+                    error: error => {
+                        console.log(error);
+                    }
+                });
+            }
+
+
+            render() {
+                let { name, url } = this.state;
+                if (name == null) {
+                    return <h2>LOADING ......</h2>
+                } else {
+                    return <h2>MOST START IS <a href={url}>{name}</a></h2>
+                }
+            }
+
+        }
+
+        ReactDOM.render(<MyComponent />, document.getElementById('text'))
+
+
+    </script>
+</body>
+
+</html>

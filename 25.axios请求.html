@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>lkeda-sercurity</title>
+    <style>
+    </style>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="text"></div>
+    </div>
+
+
+    <script type="text/babel">
+
+        class MyComponent extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    name: null,
+                    url: null
+                }
+            }
+            componentDidMount() {
+                // 在这里发送axios的异步请求
+                let respUrl = "https://api.github.com/search/repositories?q=re&sort=stars";
+
+                axios.get(respUrl).then(res => {
+                    let { name, html_url } = res.data.items[0];
+                    console.log(name, html_url)
+
+                    this.setState({
+                        name: name,
+                        url: html_url
+                    })
+                })
+            }
+
+            render() {
+                let { name, url } = this.state;
+                console.log(name)
+                if (name == null) {
+                    return <h2>LOADING ......</h2>
+                } else {
+                    return <h2>MOST START IS <a href={url}>{name}</a></h2>
+                }
+            }
+
+        }
+
+        ReactDOM.render(<MyComponent />, document.getElementById('text'))
+
+
+    </script>
+</body>
+
+</html>
